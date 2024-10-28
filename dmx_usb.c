@@ -58,6 +58,10 @@ void close_dmx_device(libusb_device_handle* handle) {
 // Set specific DMX channels to control the light color and intensity
 int change_color(int intensity, int red, int green, int blue, int white, int amber, int violet, int strobe, int color_shift) {
     libusb_device_handle *handle = open_dmx_device();
+    if (!handle) {
+        fprintf(stderr, "Failed to initialize libusb\n");
+        return ret;
+    }
     int ret = 0;
     unsigned char data[10] = {0};
     data[0] = intensity;  // Channel 1: Intensity (brightness)
@@ -70,11 +74,6 @@ int change_color(int intensity, int red, int green, int blue, int white, int amb
     data[7] = strobe;    // Channel 8: Strobe
     data[8] = color_shift;    // Channel 9: Color Shift
     data[9] = 0;    // Channel 10: Test
-
-    if (!handle) {
-        fprintf(stderr, "Failed to initialize libusb\n");
-        return ret;
-    }
 
     // Send control transfer to update DMX light values
     ret = libusb_control_transfer(handle,

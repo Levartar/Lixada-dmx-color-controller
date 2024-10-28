@@ -1,0 +1,85 @@
+/* Full-Screen Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: linear-gradient(to bottom, #000, #333);
+    overflow-y: auto;
+}
+
+h1 {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 2em;
+}
+
+/* Container Styling for Mobile */
+#controller {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+/* Intensity Slider */
+#intensity {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Color Wheel Styling */
+#color-wheel {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#color-picker {
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    margin-top: 8px;
+}
+
+/* Additional Sliders */
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+/* Button (if needed later) */
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #666;
+}
