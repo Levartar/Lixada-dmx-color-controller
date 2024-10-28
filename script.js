@@ -4,14 +4,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const redSlider = document.getElementById("red");
     const greenSlider = document.getElementById("green");
     const blueSlider = document.getElementById("blue");
-    const additionalSliders = ["white", "amber", "violet", "strobe", "color_shift"];
+    const amberSlider = document.getElementById("amber");
+    const violetSlider = document.getElementById("violet");
+    const additionalSliders = ["white", "strobe", "color_shift"];
 
     // Update DMX on color and intensity change
     function updateColor() {
-        const rgb = hexToRgb(colorPicker.value);
-        redSlider.value = rgb.r;
-        greenSlider.value = rgb.g;
-        blueSlider.value = rgb.b;
+        const { red, green, blue, amber, violet } = rgbToDmxExtended(colorPicker.value);
+        redSlider.value = red;
+        greenSlider.value = green;
+        blueSlider.value =blue;
+        amberSlider.value = amber;
+        violetSlider.value = violet;
         sendDMXData();
     }
 
@@ -23,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
             green: parseInt(greenSlider.value),
             blue: parseInt(blueSlider.value),
             white: parseInt(document.getElementById("white").value),
-            amber: parseInt(document.getElementById("amber").value),
-            violet: parseInt(document.getElementById("violet").value),
+            amber: parseInt(amberSlider.value),
+            violet: parseInt(violetSlider.value),
             strobe: parseInt(document.getElementById("strobe").value),
             color_shift: parseInt(document.getElementById("color_shift").value),
         };
@@ -54,9 +58,9 @@ function rgbToDmxExtended(hex) {
 
     // Calculate the white component for balanced RGB
     //white = Math.min(r, g, b);
-    //const red = r - white;
-    //const green = g - white;
-    //const blue = b - white;
+    const red = r;
+    const green = g;
+    const blue = b;
 
     // Calculate amber and violet tones based on color dominance
     if (red > green && red > blue) {
@@ -64,6 +68,8 @@ function rgbToDmxExtended(hex) {
     } else if (blue > red && blue > green) {
         violet = Math.min(255, blue * 0.5);
     }
+
+    console.log(red,green,blue,white,amber,violet)
 
     // Return extended DMX color values
     return {
