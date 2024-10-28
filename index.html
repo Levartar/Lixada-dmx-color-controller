@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DMX Light Controller</title>
+</head>
+<body>
+    <h1>DMX Light Controller</h1>
+    <form id="form">
+        <!-- Sliders for intensity and colors -->
+        <label>Intensity</label>
+        <input type="range" id="intensity" min="0" max="255" value="128"><br>
+
+        <label>Red</label>
+        <input type="range" id="red" min="0" max="255" value="0"><br>
+
+        <label>Green</label>
+        <input type="range" id="green" min="0" max="255" value="0"><br>
+
+        <label>Blue</label>
+        <input type="range" id="blue" min="0" max="255" value="0"><br>
+
+        <label>White</label>
+        <input type="range" id="white" min="0" max="255" value="0"><br>
+
+        <label>Amber</label>
+        <input type="range" id="amber" min="0" max="255" value="0"><br>
+
+        <label>Violet</label>
+        <input type="range" id="violet" min="0" max="255" value="0"><br>
+
+        <label>Strobe</label>
+        <input type="range" id="strobe" min="0" max="255" value="0"><br>
+
+        <label>Color Shift</label>
+        <input type="range" id="color_shift" min="0" max="255" value="0"><br>
+
+        <button type="submit" id="set">Set Color</button>
+    </form>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting in the default way
+            postColors(); // Call the function to handle the API request
+        });
+
+        function postColors(){
+            const data = {
+                intensity: parseInt(document.getElementById('intensity').value),
+                red: parseInt(document.getElementById('red').value),
+                green: parseInt(document.getElementById('green').value),
+                blue: parseInt(document.getElementById('blue').value),
+                white: parseInt(document.getElementById('white').value),
+                amber: parseInt(document.getElementById('amber').value),
+                violet: parseInt(document.getElementById('violet').value),
+                strobe: parseInt(document.getElementById('strobe').value),
+                color_shift: parseInt(document.getElementById('color_shift').value),
+            };
+
+            console.log(data); // Log the data to the console for debugging
+
+            fetch('http://192.168.0.33:5000/api/set_color', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data.message))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
