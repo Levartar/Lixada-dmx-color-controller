@@ -32,11 +32,11 @@ nano index.html
 ```
 
 ```
-            fetch('http://<ypur-ip>:5000/api/set_color', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
+fetch('http://<ypur-ip>:5000/api/set_color', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+})
 ```
 Host index.html with your webserver like nginx
 ```
