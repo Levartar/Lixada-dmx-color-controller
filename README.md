@@ -55,3 +55,8 @@ reload nginx to make route available
 sudo systemctl reload nginx
 ```
 
+## Errors
+if you get CORS errors when fetching the server its propably because of firewall issues
+```
+sudo ufw allow 5000
+```
