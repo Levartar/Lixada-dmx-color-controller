@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
             color_shift: parseInt(document.getElementById("color_shift").value) || 0,
             ts: Date.now()
         };
+        console.log('DMX Data:', data);
 
         // If firebase is available, write to the realtime DB under devices/<DEVICE_ID>/last_command
         if (window.firebase && firebase.database) {
@@ -60,37 +61,37 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Function to convert RGB values to DMX format with white, amber, and violet adjustments
-function rgbToDmxExtended(hex) {
-    const { r, g, b } = hexToRgb(hex);
-    let white = 0;
-    let amber = 0;
-    let violet = 0;
+    function rgbToDmxExtended(hex) {
+        const { r, g, b } = hexToRgb(hex);
+        let white = 0;
+        let amber = 0;
+        let violet = 0;
 
-    // Calculate the white component for balanced RGB
-    //white = Math.min(r, g, b);
-    const red = r;
-    const green = g;
-    const blue = b;
+        // Calculate the white component for balanced RGB
+        //white = Math.min(r, g, b);
+        const red = r;
+        const green = g;
+        const blue = b;
 
-    // Calculate amber and violet tones based on color dominance
-    if (red > green && red > blue) {
-        amber = Math.min(255, red * 0.5);
-    } else if (blue > red && blue > green) {
-        violet = Math.min(255, blue * 0.5);
+        // Calculate amber and violet tones based on color dominance
+        if (red > green && red > blue) {
+            amber = Math.min(255, red * 0.5);
+        } else if (blue > red && blue > green) {
+            violet = Math.min(255, blue * 0.5);
+        }
+
+        console.log(red,green,blue,white,amber,violet)
+
+        // Return extended DMX color values
+        return {
+            red: red,
+            green: green,
+            blue: blue,
+            white: white,
+            amber: amber,
+            violet: violet
+        };
     }
-
-    console.log(red,green,blue,white,amber,violet)
-
-    // Return extended DMX color values
-    return {
-        red: red,
-        green: green,
-        blue: blue,
-        white: white,
-        amber: amber,
-        violet: violet
-    };
-}
 
     // Event Listeners for sliders and color picker
     intensitySlider.addEventListener("input", sendDMXData);
