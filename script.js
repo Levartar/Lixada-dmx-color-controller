@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // Ensure the UI uses the configured device id from index.html
+    if (!window.DMX_DEVICE_ID) {
+        // messagingSenderId from your firebase config in index.html
+        window.DMX_DEVICE_ID = '290688576796';
+    }
     const intensitySlider = document.getElementById("intensity");
     const colorPicker = document.getElementById("color-picker");
     const redSlider = document.getElementById("red");
@@ -22,25 +27,30 @@ document.addEventListener("DOMContentLoaded", function() {
     // Send DMX Data on each slider change
     function sendDMXData() {
         const data = {
-            intensity: parseInt(intensitySlider.value),
-            red: parseInt(redSlider.value),
-            green: parseInt(greenSlider.value),
-            blue: parseInt(blueSlider.value),
-            white: parseInt(document.getElementById("white").value),
-            amber: parseInt(amberSlider.value),
-            violet: parseInt(violetSlider.value),
-            strobe: parseInt(document.getElementById("strobe").value),
-            color_shift: parseInt(document.getElementById("color_shift").value),
+            intensity: parseInt(intensitySlider.value) || 0,
+            red: parseInt(redSlider.value) || 0,
+            green: parseInt(greenSlider.value) || 0,
+            blue: parseInt(blueSlider.value) || 0,
+            white: parseInt(document.getElementById("white").value) || 0,
+            amber: parseInt(amberSlider.value) || 0,
+            violet: parseInt(violetSlider.value) || 0,
+            strobe: parseInt(document.getElementById("strobe").value) || 0,
+            color_shift: parseInt(document.getElementById("color_shift").value) || 0,
+            ts: Date.now()
         };
 
-        fetch('http://192.168.0.33:5000/api/set_color', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => console.log(data.message))
-        .catch(error => console.error('Error:', error));
+        // If firebase is available, write to the realtime DB under devices/<DEVICE_ID>/last_command
+        if (window.firebase && firebase.database) {
+            try {
+                // DEVICE_ID must be set on the page or use a default
+                const DEVICE_ID = window.DMX_DEVICE_ID || '290688576796';
+                const dbRef = firebase.database().ref(`devices/${DEVICE_ID}/last_command`);
+                dbRef.set(data).catch(err => console.error('Firebase write failed', err));
+                return;
+            } catch (e) {
+                console.error('Firebase write error', e);
+            }
+        }
     }
 
     // Convert hex color to RGB

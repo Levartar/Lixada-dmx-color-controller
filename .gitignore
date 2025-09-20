@@ -8,5 +8,8 @@ dist/
 htmlcov/
 .tox/
 docs/_build/
+
+#Backend
 Backend/.venv*/
 Backend/venv*/
+Backend/serviceAccountKey.json
