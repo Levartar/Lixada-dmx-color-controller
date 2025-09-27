@@ -1,3 +1,5 @@
+import * as slider from './slider.js';
+
 document.addEventListener("DOMContentLoaded", function() {
     // Ensure the UI uses the configured device id from index.html
     if (!window.DMX_DEVICE_ID) {
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Send DMX Data on each slider change
     function sendDMXData() {
+        slider.updateAllSliders()
         const data = {
             intensity: parseInt(intensitySlider.value) || 0,
             red: parseInt(redSlider.value) || 0,
@@ -92,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
+    // Inits
     intensitySlider.addEventListener("input", sendDMXData);
     colorPicker.addEventListener("input", updateColor);
     redSlider.addEventListener("input", sendDMXData);
@@ -100,4 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
     additionalSliders.forEach(id => {
         document.getElementById(id).addEventListener("input", sendDMXData);
     });
+
+    console.log("Initialized, sending initial DMX data");
+    slider.initSliderProgressList([intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider]);
 });
