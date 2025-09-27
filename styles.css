@@ -9,6 +9,10 @@ body {
   background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('https://assets.content.technologyadvice.com/636015928527698637_58315a8dc3.webp') no-repeat center center fixed;
   background-size: cover;
   overflow-y: auto;
+
+  overflow: hidden;           /* disable page scrolling */
+  overscroll-behavior: none;  /* prevent mobile bounce/overscroll */
+  touch-action: manipulation;
 }
 
 .grid {
