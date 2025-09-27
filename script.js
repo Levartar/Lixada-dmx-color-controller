@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         console.log(red,green,blue,white,amber,violet)
 
-        // Return extended DMX color values
         return {
             red: red,
             green: green,
@@ -93,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
-    // Event Listeners for sliders and color picker
     intensitySlider.addEventListener("input", sendDMXData);
     colorPicker.addEventListener("input", updateColor);
     redSlider.addEventListener("input", sendDMXData);

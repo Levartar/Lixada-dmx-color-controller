@@ -24,45 +24,49 @@
 </head>
 <body>
     <h1>DMX Light Controller</h1>
-    <div id="controller">
-        <form id="form">
-            <!-- Intensity slider over the color picker -->
+
+    <form id="form" class="grid">
+        <div class="module glass">
             <label>Intensity</label>
-            <input type="range" id="intensity" min="0" max="255" value="128"><br>
-
-            <!-- Color Wheel for selecting RGB color -->
-            <div id="color-wheel">
-                <label>Pick a Color</label>
-                <input type="color" id="color-picker" value="#ffffff">
-            </div>
-
-            <!-- RGB Sliders -->
+            <input class="slider" type="range" id="intensity" min="0" max="255" value="128"><br>
+        </div>
+        <div class="module glass">
             <label>Red</label>
-            <input type="range" id="red" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="red" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Green</label>
-            <input type="range" id="green" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="green" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Blue</label>
-            <input type="range" id="blue" min="0" max="255" value="0"><br>
-
-            <!-- Additional Sliders for Effects -->
+            <input class="slider" type="range" id="blue" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>White</label>
-            <input type="range" id="white" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="white" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Amber</label>
-            <input type="range" id="amber" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="amber" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Violet</label>
-            <input type="range" id="violet" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="violet" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Strobe</label>
-            <input type="range" id="strobe" min="0" max="255" value="0"><br>
-
+            <input class="slider" type="range" id="strobe" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass">
             <label>Color Shift</label>
-            <input type="range" id="color_shift" min="0" max="255" value="0"><br>
-        </form>
-    </div>
+            <input class="slider" type="range" id="color_shift" min="0" max="255" value="0"><br>
+        </div>
+        <div class="module glass" id="color-wheel">
+            <label>Pick a Color</label>
+            <input type="color" id="color-picker" value="#ffffff">
+        </div>
+    </form>
     <script src="script.js"></script>
 </body>
 </html>
