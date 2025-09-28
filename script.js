@@ -51,9 +51,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function sendDMXData() {
         if (window.__dmx_init_in_progress) return;
         slider.updateAllSliders()
-        console.log('Sending DMX data to Firebase...', sliders);
         const data = {
-            ...sliders.reduce((acc, s) => ({ ...acc, [s.id]: parseInt(s.value) || 0 }), {}),
+            ...sliders.reduce((acc, s) => {
+                if (!s) return acc;
+                return { ...acc, [s.id]: parseInt(s.value) || 0 };
+            }, {}),
             ts: Date.now()
         };
         console.log('DMX Data:', data);
