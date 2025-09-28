@@ -1,7 +1,12 @@
 import * as slider from './slider.js';
 import * as db from './database.js';
+import { signInUI } from './auth.js';
 
 document.addEventListener("DOMContentLoaded", function() {
+
+    setControlsEnabled(false);
+    signInUI();
+
     // Ensure the UI uses the configured device id from index.html
     if (!window.DMX_DEVICE_ID) {
         // messagingSenderId from your firebase config in index.html
@@ -20,6 +25,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const sliders = [intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider, whiteSlider, strobeSlider, colorShiftSlider];
 
+    firebase.auth().onAuthStateChanged(async user => {
+        if (user) {
+        // user signed in: hide overlay, enable UI and initialize app
+            const overlay = document.getElementById('login-overlay');
+        if (overlay) overlay.style.display = 'none';
+            setControlsEnabled(true);
+        // now proceed with your existing init flow:
+            initAfterAuth(sliders);
+        } else {
+        // no user signed in -> show overlay and keep disabled
+            const overlay = document.getElementById('login-overlay');
+        if (overlay) overlay.style.display = 'flex';
+            setControlsEnabled(false);
+        }
+    });
 
     // Update DMXcolor on ColorPicker change
     function updateColor() {
@@ -75,16 +95,19 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
-    // Inits
-    colorPicker.addEventListener("input", updateColor);
-    sliders.forEach(slider => {
-        slider.addEventListener("input", sendDMXData);
-    });
-
     slider.updateAllSliders();
     getLatestStateFromFirebaseAndApply(sliders);
 
+    function initAfterAuth() {
+        colorPicker.addEventListener("input", updateColor);
+        sliders.forEach(slider => {
+            slider.addEventListener("input", sendDMXData);
+    });
+}
+
 });
+
+
 
 function getLatestStateFromFirebaseAndApply(sliders) {
     (async function() {
@@ -108,4 +131,13 @@ function applyState(data,sliders) {
         // small timeout to ensure any browser events settle
         setTimeout(() => { window.__dmx_init_in_progress = false; }, 50);
     }
+}
+
+// disable controls until signed in
+function setControlsEnabled(enabled) {
+  const els = document.querySelectorAll('input, button, select, textarea');
+  els.forEach(el => {
+    if (el.id === 'login-btn' || el.closest('#login-overlay')) return;
+    el.disabled = !enabled;
+  });
 }
