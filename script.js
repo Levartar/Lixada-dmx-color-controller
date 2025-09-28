@@ -65,8 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
             v = Math.min(255, b * 0.5);
         }
 
-        console.log(r,g,b,w,a,v)
-
         return {
             red: r,
             green: g,
