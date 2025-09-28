@@ -1,6 +1,6 @@
-import * as slider from './slider.js';
-import * as db from './database.js';
-import { signInUI, addLoginUIEventListener } from './auth.js';
+import * as slider from './scripts/slider.js';
+import * as db from './scripts/database.js';
+import { signInUI, addLoginUIEventListener } from './scripts/auth.js';
 
 document.addEventListener("DOMContentLoaded", function() {
 
