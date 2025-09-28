@@ -2,7 +2,7 @@ import * as slider from './scripts/slider.js';
 import * as db from './scripts/database.js';
 import { signInUI, addLoginUIEventListener } from './scripts/auth.js';
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     setControlsEnabled(false);
     signInUI();
@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", function() {
     firebase.auth().onAuthStateChanged(async user => {
         if (user) {
             const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
             setControlsEnabled(true);
             initAfterAuth(sliders);
         } else {
             const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.style.display = 'flex';
+            if (overlay) overlay.style.display = 'flex';
             setControlsEnabled(false);
         }
     });
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const { red, green, blue, amber, violet } = rgbToDmxExtended(colorPicker.value);
         redSlider.value = red;
         greenSlider.value = green;
-        blueSlider.value =blue;
+        blueSlider.value = blue;
         amberSlider.value = amber;
         violetSlider.value = violet;
         sendDMXData();
@@ -63,34 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
         db.setState(data);
     }
 
-    function hexToRgb(hex) {
-        const bigint = parseInt(hex.slice(1), 16);
-        return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
-    }
-
-    function rgbToDmxExtended(hex) {
-        const { r, g, b } = hexToRgb(hex);
-        let w = 0;
-        let a = 0;
-        let v = 0;
-
-        // Calculate amber and violet tones based on color dominance
-        if (r > g && r > b) {
-            a = Math.min(255, r * 0.5);
-        } else if (b > r && b > g) {
-            v = Math.min(255, b * 0.5);
-        }
-
-        return {
-            red: r,
-            green: g,
-            blue: b,
-            white: w,
-            amber: a,
-            violet: v
-        };
-    }
-
     slider.updateAllSliders();
     getLatestStateFromFirebaseAndApply(sliders);
     addLoginUIEventListener();
@@ -99,21 +71,47 @@ document.addEventListener("DOMContentLoaded", function() {
         colorPicker.addEventListener("input", updateColor);
         sliders.forEach(slider => {
             slider.addEventListener("input", sendDMXData);
-    });
-}
+        });
+    }
 
 });
 
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+}
 
+function rgbToDmxExtended(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    let w = 0;
+    let a = 0;
+    let v = 0;
+
+    // Calculate amber and violet tones based on color dominance
+    if (r > g && r > b) {
+        a = Math.min(255, r * 0.5);
+    } else if (b > r && b > g) {
+        v = Math.min(255, b * 0.5);
+    }
+
+    return {
+        red: r,
+        green: g,
+        blue: b,
+        white: w,
+        amber: a,
+        violet: v
+    };
+}
 
 function getLatestStateFromFirebaseAndApply(sliders) {
-    (async function() {
+    (async function () {
         const data = await db.fetchState();
-        if (data) applyState(data,sliders);
+        if (data) applyState(data, sliders);
     })();
 }
 
-function applyState(data,sliders) {
+function applyState(data, sliders) {
     console.log('Applying initial state from Firebase:', data);
     if (!data) return;
     window.__dmx_init_in_progress = true;
@@ -129,9 +127,9 @@ function applyState(data,sliders) {
 
 // disable controls until signed in
 function setControlsEnabled(enabled) {
-  const els = document.querySelectorAll('input, button, select, textarea');
-  els.forEach(el => {
-    if (el.id === 'login-btn' || el.closest('#login-overlay')) return;
-    el.disabled = !enabled;
-  });
+    const els = document.querySelectorAll('input, button, select, textarea');
+    els.forEach(el => {
+        if (el.id === 'login-btn' || el.closest('#login-overlay')) return;
+        el.disabled = !enabled;
+    });
 }
