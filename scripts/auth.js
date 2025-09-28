@@ -29,7 +29,7 @@ export function addLoginUIEventListener() {
         loginOverlay.style.display = 'flex';
       });
     }
-    // Optionally hide overlay on "Cancel"
+
     var loginGuest = document.getElementById('login-guest');
     if (loginGuest && loginOverlay) {
       loginGuest.addEventListener('click', function() {

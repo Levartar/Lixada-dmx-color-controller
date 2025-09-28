@@ -7,9 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     setControlsEnabled(false);
     signInUI();
 
-    // Ensure the UI uses the configured device id from index.html
+    // Firebase id
     if (!window.DMX_DEVICE_ID) {
-        // messagingSenderId from your firebase config in index.html
         window.DMX_DEVICE_ID = '290688576796';
     }
     const colorPicker = document.getElementById("color-picker");
@@ -27,14 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     firebase.auth().onAuthStateChanged(async user => {
         if (user) {
-        // user signed in: hide overlay, enable UI and initialize app
             const overlay = document.getElementById('login-overlay');
         if (overlay) overlay.style.display = 'none';
             setControlsEnabled(true);
-        // now proceed with your existing init flow:
             initAfterAuth(sliders);
         } else {
-        // no user signed in -> show overlay and keep disabled
             const overlay = document.getElementById('login-overlay');
         if (overlay) overlay.style.display = 'flex';
             setControlsEnabled(false);
@@ -52,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function() {
         sendDMXData();
     }
 
-    // Send DMX Data on each slider change
     function sendDMXData() {
         if (window.__dmx_init_in_progress) return;
         slider.updateAllSliders()
@@ -65,13 +60,11 @@ document.addEventListener("DOMContentLoaded", function() {
         db.setState(data);
     }
 
-    // Convert hex color to RGB
     function hexToRgb(hex) {
         const bigint = parseInt(hex.slice(1), 16);
         return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
     }
 
-    // Function to convert RGB values to DMX format with white, amber, and violet adjustments
     function rgbToDmxExtended(hex) {
         const { r, g, b } = hexToRgb(hex);
         let w = 0;
@@ -120,16 +113,13 @@ function getLatestStateFromFirebaseAndApply(sliders) {
 function applyState(data,sliders) {
     console.log('Applying initial state from Firebase:', data);
     if (!data) return;
-    // avoid triggering writes while applying
     window.__dmx_init_in_progress = true;
     try {
-        // selectors are in the enclosing module scope
         sliders.forEach(slider => {
             slider.value = data[slider.id] || 0;
         });
         slider.updateAllSliders();
     } finally {
-        // small timeout to ensure any browser events settle
         setTimeout(() => { window.__dmx_init_in_progress = false; }, 50);
     }
 }

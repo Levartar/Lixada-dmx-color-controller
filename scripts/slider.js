@@ -4,7 +4,6 @@ export function setSliderProgress(slider) {
     slider.style.setProperty('--slider-progress', pct + '%');
 }
 
-// initialize progress for a list of elements
 export function initSliderProgressList(list) {
     list.forEach(idOrEl => {
         const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
