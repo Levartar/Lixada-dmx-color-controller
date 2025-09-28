@@ -52,7 +52,7 @@ body {
     justify-content: space-between;
 }
 
-/* Intensity Slider */
+/* Sliders */
 .slider-label {
     pointer-events: none;
     position: absolute;
