@@ -62,32 +62,26 @@ document.addEventListener("DOMContentLoaded", function() {
     // Function to convert RGB values to DMX format with white, amber, and violet adjustments
     function rgbToDmxExtended(hex) {
         const { r, g, b } = hexToRgb(hex);
-        let white = 0;
-        let amber = 0;
-        let violet = 0;
-
-        // Calculate the white component for balanced RGB
-        //white = Math.min(r, g, b);
-        const red = r;
-        const green = g;
-        const blue = b;
+        let w = 0;
+        let a = 0;
+        let v = 0;
 
         // Calculate amber and violet tones based on color dominance
-        if (red > green && red > blue) {
-            amber = Math.min(255, red * 0.5);
-        } else if (blue > red && blue > green) {
-            violet = Math.min(255, blue * 0.5);
+        if (r > g && r > b) {
+            a = Math.min(255, r * 0.5);
+        } else if (b > r && b > g) {
+            v = Math.min(255, b * 0.5);
         }
 
-        console.log(red,green,blue,white,amber,violet)
+        console.log(r,g,b,w,a,v)
 
         return {
-            red: red,
-            green: green,
-            blue: blue,
-            white: white,
-            amber: amber,
-            violet: violet
+            red: r,
+            green: g,
+            blue: b,
+            white: w,
+            amber: a,
+            violet: v
         };
     }
 
@@ -98,14 +92,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     slider.updateAllSliders();
-    // fetch and apply the last command from Firebase on load (if available)
+    getLatestStateFromFirebaseAndApply(sliders);
+
+});
+
+function getLatestStateFromFirebaseAndApply(sliders) {
     (async function() {
         const data = await db.fetchState();
         if (data) applyState(data,sliders);
     })();
-});
+}
 
-// Apply a state object to the UI (without emitting it back to Firebase)
 function applyState(data,sliders) {
     console.log('Applying initial state from Firebase:', data);
     if (!data) return;
