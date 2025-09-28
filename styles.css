@@ -1,7 +1,6 @@
 /* Full-Screen Styling */
 body {
   margin: 0 auto;
-  padding: 1em 0;
   max-width: 56em;
 
   font-family: Arial, sans-serif;
@@ -45,10 +44,12 @@ body {
   }
 }
 
-h1 {
-    margin: 10px 0;
-    text-align: center;
-    font-size: 2em;
+.header {
+    display: flex;
+    margin: 10px 10px;
+    font-size: 1em;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* Intensity Slider */

@@ -1,6 +1,6 @@
 import * as slider from './slider.js';
 import * as db from './database.js';
-import { signInUI } from './auth.js';
+import { signInUI, addLoginUIEventListener } from './auth.js';
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     slider.updateAllSliders();
     getLatestStateFromFirebaseAndApply(sliders);
+    addLoginUIEventListener();
 
     function initAfterAuth() {
         colorPicker.addEventListener("input", updateColor);

@@ -2,22 +2,38 @@ export async function signInUI() {
   const overlay = document.getElementById('login-overlay');
   const emailEl = document.getElementById('login-email');
   const passEl = document.getElementById('login-pass');
-  const btn = document.getElementById('login-btn');
+  const login = document.getElementById('login-btn');
   const err = document.getElementById('login-error');
   const cancel = document.getElementById('login-guest');
 
-  btn.onclick = async () => {
+  login.onclick = async () => {
     err.style.display = 'none';
     try {
-      await firebase.auth().signInWithEmailAndPassword(emailEl.value.trim(), passEl.value);
-      // success -> onAuthStateChanged will hide overlay and init
+        await firebase.auth().signInWithEmailAndPassword(emailEl.value.trim(), passEl.value);
+        overlay.style.display = 'none';
     } catch (e) {
-      err.textContent = e.message || 'Sign in failed';
+      err.textContent = e.message.startsWith('{') ? 'Sign in failed' : e.message;
       err.style.display = 'block';
     }
   };
   cancel.onclick = () => {
-    // optional: hide overlay and keep UI disabled
     overlay.style.display = 'none';
   };
+}
+
+export function addLoginUIEventListener() {
+    var loginOverlay = document.getElementById('login-overlay');
+    var openLoginBtn = document.getElementById('open-login-btn');
+    if (openLoginBtn && loginOverlay) {
+      openLoginBtn.addEventListener('click', function() {
+        loginOverlay.style.display = 'flex';
+      });
+    }
+    // Optionally hide overlay on "Cancel"
+    var loginGuest = document.getElementById('login-guest');
+    if (loginGuest && loginOverlay) {
+      loginGuest.addEventListener('click', function() {
+        loginOverlay.style.display = 'none';
+      });
+    }
 }
