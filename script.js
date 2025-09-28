@@ -1,4 +1,5 @@
 import * as slider from './slider.js';
+import * as db from './database.js';
 
 document.addEventListener("DOMContentLoaded", function() {
     // Ensure the UI uses the configured device id from index.html
@@ -6,16 +7,21 @@ document.addEventListener("DOMContentLoaded", function() {
         // messagingSenderId from your firebase config in index.html
         window.DMX_DEVICE_ID = '290688576796';
     }
-    const intensitySlider = document.getElementById("intensity");
     const colorPicker = document.getElementById("color-picker");
+    const intensitySlider = document.getElementById("intensity");
     const redSlider = document.getElementById("red");
     const greenSlider = document.getElementById("green");
     const blueSlider = document.getElementById("blue");
     const amberSlider = document.getElementById("amber");
     const violetSlider = document.getElementById("violet");
-    const additionalSliders = ["white", "strobe", "color_shift"];
+    const whiteSlider = document.getElementById("white");
+    const strobeSlider = document.getElementById("strobe");
+    const colorShiftSlider = document.getElementById("color_shift");
 
-    // Update DMX on color and intensity change
+    const sliders = [intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider, whiteSlider, strobeSlider, colorShiftSlider];
+
+
+    // Update DMXcolor on ColorPicker change
     function updateColor() {
         const { red, green, blue, amber, violet } = rgbToDmxExtended(colorPicker.value);
         redSlider.value = red;
@@ -28,33 +34,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Send DMX Data on each slider change
     function sendDMXData() {
+        if (window.__dmx_init_in_progress) return;
         slider.updateAllSliders()
         const data = {
             intensity: parseInt(intensitySlider.value) || 0,
             red: parseInt(redSlider.value) || 0,
             green: parseInt(greenSlider.value) || 0,
             blue: parseInt(blueSlider.value) || 0,
-            white: parseInt(document.getElementById("white").value) || 0,
+            white: parseInt(whiteSlider.value) || 0,
             amber: parseInt(amberSlider.value) || 0,
             violet: parseInt(violetSlider.value) || 0,
-            strobe: parseInt(document.getElementById("strobe").value) || 0,
-            color_shift: parseInt(document.getElementById("color_shift").value) || 0,
+            strobe: parseInt(strobeSlider.value) || 0,
+            color_shift: parseInt(colorShiftSlider.value) || 0,
             ts: Date.now()
         };
         console.log('DMX Data:', data);
 
-        // If firebase is available, write to the realtime DB under devices/<DEVICE_ID>/last_command
-        if (window.firebase && firebase.database) {
-            try {
-                // DEVICE_ID must be set on the page or use a default
-                const DEVICE_ID = window.DMX_DEVICE_ID || '290688576796';
-                const dbRef = firebase.database().ref(`devices/${DEVICE_ID}/last_command`);
-                dbRef.set(data).catch(err => console.error('Firebase write failed', err));
-                return;
-            } catch (e) {
-                console.error('Firebase write error', e);
-            }
-        }
+        db.setState(data);
     }
 
     // Convert hex color to RGB
@@ -96,15 +92,33 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Inits
-    intensitySlider.addEventListener("input", sendDMXData);
     colorPicker.addEventListener("input", updateColor);
-    redSlider.addEventListener("input", sendDMXData);
-    greenSlider.addEventListener("input", sendDMXData);
-    blueSlider.addEventListener("input", sendDMXData);
-    additionalSliders.forEach(id => {
-        document.getElementById(id).addEventListener("input", sendDMXData);
+    sliders.forEach(slider => {
+        slider.addEventListener("input", sendDMXData);
     });
 
-    console.log("Initialized, sending initial DMX data");
-    slider.initSliderProgressList([intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider]);
+    slider.updateAllSliders();
+    // fetch and apply the last command from Firebase on load (if available)
+    (async function() {
+        const data = await db.fetchState();
+        if (data) applyState(data,sliders);
+    })();
 });
+
+// Apply a state object to the UI (without emitting it back to Firebase)
+function applyState(data,sliders) {
+    console.log('Applying initial state from Firebase:', data);
+    if (!data) return;
+    // avoid triggering writes while applying
+    window.__dmx_init_in_progress = true;
+    try {
+        // selectors are in the enclosing module scope
+        sliders.forEach(slider => {
+            slider.value = data[slider.id] || 0;
+        });
+        slider.updateAllSliders();
+    } finally {
+        // small timeout to ensure any browser events settle
+        setTimeout(() => { window.__dmx_init_in_progress = false; }, 50);
+    }
+}
