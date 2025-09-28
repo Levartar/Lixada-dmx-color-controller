@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const violetSlider = document.getElementById("violet");
     const whiteSlider = document.getElementById("white");
     const strobeSlider = document.getElementById("strobe");
-    const colorShiftSlider = document.getElementById("color_shift");
+    //const colorShiftSlider = document.getElementById("color_shift");
 
-    const sliders = [intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider, whiteSlider, strobeSlider, colorShiftSlider];
+    const sliders = [intensitySlider, redSlider, greenSlider, blueSlider, amberSlider, violetSlider, whiteSlider, strobeSlider];
 
     firebase.auth().onAuthStateChanged(async user => {
         if (user) {
@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function sendDMXData() {
         if (window.__dmx_init_in_progress) return;
         slider.updateAllSliders()
+        console.log('Sending DMX data to Firebase...', sliders);
         const data = {
             ...sliders.reduce((acc, s) => ({ ...acc, [s.id]: parseInt(s.value) || 0 }), {}),
             ts: Date.now()
