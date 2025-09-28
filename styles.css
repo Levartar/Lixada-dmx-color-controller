@@ -60,13 +60,14 @@ body {
 
 /* Sliders */
 .slider-label {
-    pointer-events: none;
-    position: absolute;
-    transform: translateY(-50%) rotate(-90deg);
-    left: 50%;
-    top: 50%;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px black;
+  pointer-events: none;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  transform: rotate(-90deg) translateY(-100%);
+  transform-origin: top right;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
 }
 .slider {
   border-radius: 16px;
@@ -100,5 +101,24 @@ body {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
+  position: relative;
+  }
+  .glass:has(#red) {
+    background: rgba(255, 0, 0, 0.25);
+  }
+  .glass:has(#green) {
+    background: rgba(0, 255, 0, 0.25);
+  }
+  .glass:has(#blue) {
+    background: rgba(0, 0, 255, 0.25);
+  }
+  .glass:has(#white) {
+    background: rgba(255, 255, 255, 0.4);
+  }
+  .glass:has(#amber) {
+    background: rgba(250, 175, 0, 0.25);
+  }
+  .glass:has(#violet) {
+    background: rgba(255, 0, 255, 0.25);
+  }
 
