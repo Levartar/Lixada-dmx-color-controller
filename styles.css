@@ -23,6 +23,12 @@ body {
   grid-gap: 1em;
 }
 
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .module {
   /* Demo-Specific Styles */
   background: #1b1a1a;
