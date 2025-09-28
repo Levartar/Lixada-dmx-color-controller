@@ -37,15 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (window.__dmx_init_in_progress) return;
         slider.updateAllSliders()
         const data = {
-            intensity: parseInt(intensitySlider.value) || 0,
-            red: parseInt(redSlider.value) || 0,
-            green: parseInt(greenSlider.value) || 0,
-            blue: parseInt(blueSlider.value) || 0,
-            white: parseInt(whiteSlider.value) || 0,
-            amber: parseInt(amberSlider.value) || 0,
-            violet: parseInt(violetSlider.value) || 0,
-            strobe: parseInt(strobeSlider.value) || 0,
-            color_shift: parseInt(colorShiftSlider.value) || 0,
+            ...sliders.reduce((acc, s) => ({ ...acc, [s.id]: parseInt(s.value) || 0 }), {}),
             ts: Date.now()
         };
         console.log('DMX Data:', data);
